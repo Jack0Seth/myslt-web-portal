@@ -15,7 +15,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import WifiIcon from '@mui/icons-material/Wifi';
 // Keep these imports for compatibility with the rest of the code
 import BroadbandIcon from "../../assets/Broadband.png";
-import PeoTVIcon from "../../assets/PeoTV.png";
+import PeoTVIcon from "../../assets/peotv.png";
 import VoiceIcon from "../../assets/Voice.png";
 import createSalesLead, { SalesLeadCreationResponse } from "../../services/postpaid/createSalesLead"; // Import the API function
 import { useTranslation } from 'react-i18next';
