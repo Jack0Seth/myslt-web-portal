@@ -1,3 +1,36 @@
 .mobile-content-section {
   padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mobile-menu-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-menu-item {
+  min-width: 120px;
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mobile-menu-item.active {
+  background: #4fc3f7;
+  color: white;
+  font-weight: 500;
+}
+
+.mobile-menu-item.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }

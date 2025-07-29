@@ -1,5 +1,3 @@
-// src/components/BroadbandSection.js
-
 import { useEffect, useState } from "react";
 import fetchDataBalance from "../services/prepaid/fetchDataBalance";
 import useStore from "../services/useAppStore";
@@ -40,35 +38,27 @@ import ProtocolReport from "./BroadbandDetails/ProtocolReport";
 import fetchDetaliedReportAvailability from "../services/postpaid/enableDetailedReport/fetchDetaliedReportAvailability";
 import DisableDetailedReport from "./BroadbandDetails/DisableDetailedReport";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import VideoOnDemand from "./PeoTV/VideoOnDemand";
-// import fetchPurchaseHistory from "../services/postpaid/fetchhistorydetails";
 
 import History from "./DataAddonHistory";
 
-import {
-  // Button,
-  // Dialog,
-  // DialogActions,
-  // DialogContent,
-  // DialogTitle,
-  Typography,
-} from "@mui/material";
+import { Typography, useMediaQuery, useTheme } from "@mui/material"; // Import useMediaQuery and useTheme
 import PeoTvPackages from "./PeoTV/PeoTvPackages";
 
 const UnderConstruction = () => {
   return (
     <Box
-    sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      width: "100%",
-      height: "450px",
-      backgroundColor: "white",
-      borderRadius: 3,
-      fontFamily: "Poppins, sans-serif"
-    }}
-    
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "450px",
+        backgroundColor: "white",
+        borderRadius: 3,
+        fontFamily: "Poppins, sans-serif",
+      }}
     >
       <Typography variant="body2" sx={{ color: "#0056A2", fontSize: 24 }}>
         Under Construction
@@ -88,16 +78,12 @@ const ContentSection = () => {
     selectedNavbarItem,
     packageName,
     serviceDetails,
-    // Remove setEmail if it doesn't exist in your store
-    // setEmail,
-    setDetailReportAvailability
+    setDetailReportAvailability,
   } = useStore();
 
-  // Remove unused isPrepaid variable
-  // const isPrepaid =
-  //     serviceDetails?.promotionType === "Prepaid" ||
-  //     serviceDetails?.promotionType === null;
-      
+  const theme = useTheme(); // Initialize useTheme
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Check if screen is 'sm' (small) or down
+
   const disabledItems = [
     "New Services",
     "Promotion",
@@ -112,7 +98,7 @@ const ContentSection = () => {
     "ContactInformationChange",
     "BroadbandPasswordChange",
     "GetExtraGB",
-  ]; // menu icons that will disable the left menu upon clicking
+  ];
 
   useEffect(() => {
     const getDetailedReportAvalability = async () => {
@@ -120,8 +106,6 @@ const ContentSection = () => {
       if (subcriberID) {
         const response = await fetchDetaliedReportAvailability(subcriberID);
         setDetailReportAvailability(response!["availability"]);
-        // Remove setEmail call if it doesn't exist in your store
-        // setEmail(response!["email"]);
       }
     };
     getDetailedReportAvalability();
@@ -153,10 +137,139 @@ const ContentSection = () => {
     fetchData();
   }, [selectedTelephone, packageListUpdate]);
 
-  // Fixed return statement using conditional rendering
+  const renderContent = () => {
+    const isGridItemCandidate = [
+      "Summary",
+      "Daily Usage",
+      "My Package",
+      "GetExtraGB",
+    ].includes(selectedLeftMenuItem);
+
+    if (isMobile && isGridItemCandidate) {
+      return (
+        <Grid container spacing={2}> {/* Main grid container for mobile */}
+          {/* Grid Row 1 for mobile */}
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              {selectedLeftMenuItem === "Summary" && (
+                <Grid item xs={12} sm={6}> {/* xs=12 for stacking on very small mobile, sm=6 for 2-column on larger mobile/tablet */}
+                  <BroadbandDetailsPostPaid />
+                </Grid>
+              )}
+              {selectedLeftMenuItem === "Daily Usage" && (
+                <Grid item xs={12} sm={6}>
+                  <DailyUsage />
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+
+          {/* Grid Row 2 for mobile */}
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              {selectedLeftMenuItem === "My Package" && (
+                <Grid item xs={12} sm={6}>
+                  {selectedNavbarItem === "Broadband" && <MyPackagePeotv />}
+                  {selectedNavbarItem === "Voice" && <MyPackageVoice />}
+                </Grid>
+              )}
+              {selectedLeftMenuItem === "GetExtraGB" && (
+                <Grid item xs={12} sm={6}>
+                  <GetExtraGB packageName={packageName} />
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        </Grid>
+      );
+    }
+
+    // Default rendering for desktop or for non-grid items on mobile
+    switch (selectedLeftMenuItem) {
+      case "Summary":
+        return <BroadbandDetailsPostPaid />;
+      case "Daily Usage":
+        return <DailyUsage />;
+      case "Gift Data":
+        return <GiftData />;
+      case "History":
+        return <History />;
+      case "Redeem Data":
+        return <Redeem />;
+      case "Happy Day":
+        return <HappyDay />;
+      case "Subscription":
+        return <SubscriptionPage />;
+      case "ContactInformationChange":
+        return <ChangeContactForm />;
+      case "BroadbandPasswordChange":
+        return <ChangeBroadbandPassword />;
+      case "DetailedUsageDetails":
+        return <DetailedUsage onClose={() => {}} />;
+      case "ProtocolReport":
+        return <ProtocolReport />;
+      case "PostPaidPackageUpgrade":
+        return <BroadbandPostPaidPackageUpgrader />;
+      case "GetExtraGB":
+        return <GetExtraGB packageName={packageName} />;
+      case "GetPostpaidAddOnPackages":
+        return <BroadbandPostPaidGetAddOns />;
+      case "DisableDetailReport":
+        return <DisableDetailedReport />;
+      case "Main Packages":
+        return <BroadbandDetailsPrePaid dataBalance={mainData} />;
+      case "Data Add-Ons":
+        return <BroadbandDetailsPrepaidAddons dataBalance={addOnData} />;
+      case "GetBroadbandMainPackage":
+        return <BroadbandPrepaidMainPackages />;
+      case "GetBroadbandAddOnPackage":
+        return <BroadbandPrepaidAddOnPackages />;
+      case "Transaction":
+        return <TransactionsHistory serviceId={selectedTelephone} />;
+      case "My Package":
+        // Conditional rendering for My Package based on navbar item
+        if (selectedNavbarItem === "Broadband") {
+          return <MyPackagePeotv />;
+        } else if (selectedNavbarItem === "PeoTV") {
+          return <MyPackagePeotv />;
+        } else if (selectedNavbarItem === "Voice") {
+          return <MyPackageVoice />;
+        }
+        return null; // Fallback
+      case "VOD":
+        return <VideoOnDemand />;
+      case "PEOTVGO":
+        return <PeoTvGo />;
+      case "Packages":
+        return <PeoTvPackages />;
+      case "Call Forwarding":
+        return <CallForwarding telephoneNo={selectedTelephone} />;
+      case "New Services":
+        return <NewServicesPage telephoneNo={selectedTelephone} />;
+      case "Promotion":
+        return <Promotion telephoneNo={selectedTelephone} />;
+      case "Digital Life":
+        return <DigitalLife />;
+      case "Bill":
+        return <BillPage telephoneNo={selectedTelephone} accountNo={selectedAccountNo} />;
+      case "Hot Devices":
+        return <UnderConstruction />;
+      case "Complaints":
+        return <Complaints />;
+      case "SUBMIT YOUR COMPLAINT":
+        return <AddComplaints telephoneNo={selectedTelephone} />;
+      case "My Profile":
+        return <UserProfile />;
+      case "Manage Connections":
+        return <PhoneNumberList />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    (selectedNavbarItem === "Broadband" || selectedNavbarItem === "") ? (
-      <Box sx={{ 
+    <Box
+      sx={{
         display: "flex",
         flexDirection: "column",
         gap: "20px",
@@ -166,223 +279,33 @@ const ContentSection = () => {
         boxShadow: "0 0 15px rgba(15, 59, 122, 0.9)",
         justifyContent: "center",
         alignItems: "center",
-        fontFamily: "Poppins, sans-serif",}}>
-        {!disabledItems.includes(selectedLeftMenuItem) && (
-          <Box sx={{ width: "100%" }}>
+        fontFamily: "Poppins, sans-serif",
+      }}
+    >
+      {/* Conditional rendering for MenuLeft/VerticalMenuLeft based on screen size and selectedNavbarItem */}
+      {!disabledItems.includes(selectedLeftMenuItem) && (
+        <Box sx={{ width: "100%" }}>
+          {/* On mobile, always use VerticalMenuLeft if not disabled, otherwise for desktop keep the MenuLeft logic */}
+          {isMobile ? (
             <VerticalMenuLeft />
-          </Box>
-        )}
-        <Box
-          sx={{
-            width: disabledItems.includes(selectedLeftMenuItem) ? "100%" : "100%",
-            height: "100%",
-          }}
-        >
-          {/* Rendering based on selectedLeftMenuItem */}
-          {/*Postpaid*/}
-          {selectedLeftMenuItem === "Summary" && <BroadbandDetailsPostPaid />}
-          {selectedLeftMenuItem === "Daily Usage" && <DailyUsage />}
-          {selectedLeftMenuItem === "Gift Data" && <GiftData />}
-          {selectedLeftMenuItem === "History" && <History />}
-          {selectedLeftMenuItem === "Redeem Data" && <Redeem />}
-          {selectedLeftMenuItem === "Happy Day" && <HappyDay />}
-          {selectedLeftMenuItem === "Subscription" && <SubscriptionPage />}
-          {selectedLeftMenuItem === "ContactInformationChange" && (
-            <ChangeContactForm />
+          ) : (
+            (selectedNavbarItem === "Broadband" || selectedNavbarItem === "") ? (
+              <VerticalMenuLeft />
+            ) : (
+              <MenuLeft />
+            )
           )}
-          {selectedLeftMenuItem === "BroadbandPasswordChange" && (
-            <ChangeBroadbandPassword />
-          )}
-          {/* Add onClose prop to DetailedUsage */}
-          {selectedLeftMenuItem === "DetailedUsageDetails" && <DetailedUsage onClose={() => {}} />}
-          {selectedLeftMenuItem === "ProtocolReport" && <ProtocolReport />}
-  
-          {selectedLeftMenuItem === "PostPaidPackageUpgrade" && (
-            <BroadbandPostPaidPackageUpgrader />
-          )}
-          {selectedLeftMenuItem === "GetExtraGB" && (
-            <GetExtraGB packageName={packageName} />
-          )}
-          {selectedLeftMenuItem === "GetPostpaidAddOnPackages" && (
-            <BroadbandPostPaidGetAddOns />
-          )}
-          {selectedLeftMenuItem === "DisableDetailReport" && (
-            <DisableDetailedReport />
-          )}
-  
-  
-          {/*Prepaid*/}
-          {selectedLeftMenuItem === "Main Packages" && (
-            <BroadbandDetailsPrePaid dataBalance={mainData} />
-          )}
-          {selectedLeftMenuItem === "Data Add-Ons" && (
-            <BroadbandDetailsPrepaidAddons dataBalance={addOnData} />
-          )}
-          {selectedLeftMenuItem === "GetBroadbandMainPackage" && (
-            <BroadbandPrepaidMainPackages />
-          )}
-          {selectedLeftMenuItem === "GetBroadbandAddOnPackage" && (
-            <BroadbandPrepaidAddOnPackages />
-          )}
-          {selectedLeftMenuItem === "Transaction" && (
-            <TransactionsHistory serviceId={selectedTelephone} />
-          )}
-  
-          {/*PeoTV - Only show when navbar is Broadband*/}
-          {selectedLeftMenuItem === "My Package" &&
-            selectedNavbarItem === "Broadband" && <MyPackagePeotv />}
-          {selectedLeftMenuItem === "VOD" && <VideoOnDemand />}
-          {selectedLeftMenuItem === "PEOTVGO" && <PeoTvGo />}
-          {selectedLeftMenuItem === "Packages" && <PeoTvPackages />}
-  
-          {/*Voice - Only show when navbar is Broadband*/}
-          {selectedLeftMenuItem === "My Package" &&
-            selectedNavbarItem === "Broadband" && <MyPackageVoice />}
-          {selectedLeftMenuItem === "Call Forwarding" && (
-            <CallForwarding telephoneNo={selectedTelephone} />
-          )}
-  
-          {/*QuickAccess*/}
-          {selectedLeftMenuItem === "New Services" && (
-            <NewServicesPage telephoneNo={selectedTelephone} />
-          )}
-          {selectedLeftMenuItem === "Promotion" && (
-            <Promotion telephoneNo={selectedTelephone} />
-          )}
-  
-          {selectedLeftMenuItem === "Digital Life" && <DigitalLife />}
-  
-          {selectedLeftMenuItem === "Bill" && (
-            <BillPage
-              telephoneNo={selectedTelephone}
-              accountNo={selectedAccountNo}
-            />
-          )}
-          {selectedLeftMenuItem === "Hot Devices" && <UnderConstruction />}
-          {selectedLeftMenuItem === "Complaints" && <Complaints />}
-          {selectedLeftMenuItem === "SUBMIT YOUR COMPLAINT" && (
-            <AddComplaints telephoneNo={selectedTelephone} />
-          )}
-          {selectedLeftMenuItem === "My Profile" && <UserProfile />}
-          {selectedLeftMenuItem === "Manage Connections" && <PhoneNumberList />}
         </Box>
+      )}
+      <Box
+        sx={{
+          width: disabledItems.includes(selectedLeftMenuItem) ? "100%" : (isMobile ? "100%" : "100%"), // Adjusted width for mobile
+          height: "100%",
+        }}
+      >
+        {renderContent()}
       </Box>
-    ) : (
-      <Box sx={{ display: "flex",
-        gap: "20px",  // added gap between items
-        backgroundColor: "#0F3B7A",  // changed background color
-        padding: "10px",  // added padding
-        borderRadius: "10px",  // added border radius
-        boxShadow: "0 0 15px rgba(15, 59, 122, 0.9)",  // added box shadow
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "Poppins, sans-serif",}}>
-        <Box
-          sx={{
-            width: "25%",
-            display: disabledItems.includes(selectedLeftMenuItem)
-              ? "none"
-              : "block",
-          }}
-        >
-          <MenuLeft />
-        </Box>
-        <Box
-          sx={{
-            width: disabledItems.includes(selectedLeftMenuItem) ? "100%" : "75%",
-            height: "100%",
-          }}
-        >
-          {/* Rendering based on selectedLeftMenuItem */}
-          {/*Postpaid*/}
-          {selectedLeftMenuItem === "Summary" && <BroadbandDetailsPostPaid />}
-          {selectedLeftMenuItem === "Daily Usage" && <DailyUsage />}
-          {selectedLeftMenuItem === "Gift Data" && <GiftData />}
-          {selectedLeftMenuItem === "History" && <History />}
-          {selectedLeftMenuItem === "Redeem Data" && <Redeem />}
-          {selectedLeftMenuItem === "Happy Day" && <HappyDay />}
-          {selectedLeftMenuItem === "Subscription" && <SubscriptionPage />}
-          {selectedLeftMenuItem === "ContactInformationChange" && (
-            <ChangeContactForm />
-          )}
-          {selectedLeftMenuItem === "BroadbandPasswordChange" && (
-            <ChangeBroadbandPassword />
-          )}
-          {/* Add onClose prop to DetailedUsage */}
-          {selectedLeftMenuItem === "DetailedUsageDetails" && <DetailedUsage onClose={() => {}} />}
-          {selectedLeftMenuItem === "ProtocolReport" && <ProtocolReport />}
-  
-          {selectedLeftMenuItem === "PostPaidPackageUpgrade" && (
-            <BroadbandPostPaidPackageUpgrader />
-          )}
-          {selectedLeftMenuItem === "GetExtraGB" && (
-            <GetExtraGB packageName={packageName} />
-          )}
-          {selectedLeftMenuItem === "GetPostpaidAddOnPackages" && (
-            <BroadbandPostPaidGetAddOns />
-          )}
-          {selectedLeftMenuItem === "DisableDetailReport" && (
-            <DisableDetailedReport />
-          )}
-  
-  
-          {/*Prepaid*/}
-          {selectedLeftMenuItem === "Main Packages" && (
-            <BroadbandDetailsPrePaid dataBalance={mainData} />
-          )}
-          {selectedLeftMenuItem === "Data Add-Ons" && (
-            <BroadbandDetailsPrepaidAddons dataBalance={addOnData} />
-          )}
-          {selectedLeftMenuItem === "GetBroadbandMainPackage" && (
-            <BroadbandPrepaidMainPackages />
-          )}
-          {selectedLeftMenuItem === "GetBroadbandAddOnPackage" && (
-            <BroadbandPrepaidAddOnPackages />
-          )}
-          {selectedLeftMenuItem === "Transaction" && (
-            <TransactionsHistory serviceId={selectedTelephone} />
-          )}
-  
-          {/*PeoTV*/}
-          {selectedLeftMenuItem === "My Package" &&
-            selectedNavbarItem === "PeoTV" && <MyPackagePeotv />}
-          {selectedLeftMenuItem === "VOD" && <VideoOnDemand />}
-          {selectedLeftMenuItem === "PEOTVGO" && <PeoTvGo />}
-          {selectedLeftMenuItem === "Packages" && <PeoTvPackages />}
-  
-          {/*Voice*/}
-          {selectedLeftMenuItem === "My Package" &&
-            selectedNavbarItem === "Voice" && <MyPackageVoice />}
-          {selectedLeftMenuItem === "Call Forwarding" && (
-            <CallForwarding telephoneNo={selectedTelephone} />
-          )}
-  
-          {/*QuickAccess*/}
-          {selectedLeftMenuItem === "New Services" && (
-            <NewServicesPage telephoneNo={selectedTelephone} />
-          )}
-          {selectedLeftMenuItem === "Promotion" && (
-            <Promotion telephoneNo={selectedTelephone} />
-          )}
-  
-          {selectedLeftMenuItem === "Digital Life" && <DigitalLife />}
-  
-          {selectedLeftMenuItem === "Bill" && (
-            <BillPage
-              telephoneNo={selectedTelephone}
-              accountNo={selectedAccountNo}
-            />
-          )}
-          {selectedLeftMenuItem === "Hot Devices" && <UnderConstruction />}
-          {selectedLeftMenuItem === "Complaints" && <Complaints />}
-          {selectedLeftMenuItem === "SUBMIT YOUR COMPLAINT" && (
-            <AddComplaints telephoneNo={selectedTelephone} />
-          )}
-          {selectedLeftMenuItem === "My Profile" && <UserProfile />}
-          {selectedLeftMenuItem === "Manage Connections" && <PhoneNumberList />}
-        </Box>
-      </Box>
-    )
+    </Box>
   );
 };
 
