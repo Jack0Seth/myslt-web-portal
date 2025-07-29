@@ -88,7 +88,7 @@ const HomePage: React.FC = () => {
             
             <div className={`main-content`}>
                 <div className={`slt-logo ${animationCompleted ? 'animate-logo' : ''}`}>
-                    <img src="src/assets/slt-mobitel-logo.svg" alt="SLT MOBITEL" className="logo-image" />
+                    <img src="https://i.ibb.co/DgkXDVWK/slt-mobitel-logo.png" alt="SLT MOBITEL" className="logo-image" />
                 </div>
                 
                 <div className={`marketing-message top-message ${platformAnimationCompleted ? 'fade-in-element' : 'hidden-element'}`}>
@@ -100,8 +100,8 @@ const HomePage: React.FC = () => {
                 </div>
                 
                 <div className={`fiber-mascot ${animationCompleted ? 'animate-mascot' : ''}`}>
-                    <img src="src/assets/fiber-mascot.png" alt="FibreOn Mascot" className="mascot-image" />
-                    <img src="src/assets/platform-circle.png" alt="Platform" className={`mascot-platform ${animationCompleted ? 'animate-platform' : ''}`} />
+                    <img src="https://i.ibb.co/3YfgBwDr/fiber-mascot.png" alt="FibreOn Mascot" className="mascot-image" />
+                    <img src="https://i.ibb.co/gL166GGy/platform-circle.png" alt="Platform" className={`mascot-platform ${animationCompleted ? 'animate-platform' : ''}`} />
                 </div>
                 
                 <div className={`next-button ${platformAnimationCompleted ? 'fade-in-element' : 'hidden-element'}`}>
