@@ -100,8 +100,8 @@ const HomePage: React.FC = () => {
                 </div>
                 
                 <div className={`fiber-mascot ${animationCompleted ? 'animate-mascot' : ''}`}>
-                    <img src="https://i.ibb.co/3YfgBwDr/fiber-mascot.png" alt="FibreOn Mascot" className="mascot-image" />
-                    <img src="https://i.ibb.co/gL166GGy/platform-circle.png" alt="Platform" className={`mascot-platform ${animationCompleted ? 'animate-platform' : ''}`} />
+                    <img src="src/assets/fiber-mascot.png" alt="FibreOn Mascot" className="mascot-image" />
+                    <img src="src/assets/platform-circle.png" alt="Platform" className={`mascot-platform ${animationCompleted ? 'animate-platform' : ''}`} />
                 </div>
                 
                 <div className={`next-button ${platformAnimationCompleted ? 'fade-in-element' : 'hidden-element'}`}>
