@@ -88,7 +88,7 @@ const HomePage: React.FC = () => {
             
             <div className={`main-content`}>
                 <div className={`slt-logo ${animationCompleted ? 'animate-logo' : ''}`}>
-                    <img src="https://vercel.com/sethmals-projects/myslt-web-portal-c9jt/AYAUffnBhDu6HMHKm4XxgBQnMisq/source?f=out%2Fslt-mobitel-logo.svg" alt="SLT MOBITEL" className="logo-image" />
+                    <img src="src/assets/slt-mobitel-logo.svg" alt="SLT MOBITEL" className="logo-image" />
                 </div>
                 
                 <div className={`marketing-message top-message ${platformAnimationCompleted ? 'fade-in-element' : 'hidden-element'}`}>
