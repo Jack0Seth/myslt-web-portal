@@ -88,7 +88,7 @@ const HomePage: React.FC = () => {
             
             <div className={`main-content`}>
                 <div className={`slt-logo ${animationCompleted ? 'animate-logo' : ''}`}>
-                    <img src="https://i.ibb.co/DgkXDVWK/slt-mobitel-logo.png" alt="SLT MOBITEL" className="logo-image" />
+                    <img src="https://res.cloudinary.com/dcdt4tfgs/image/upload/v1754199680/slt-mobitel-logo_kaaob4.svg" alt="SLT MOBITEL" className="logo-image" />
                 </div>
                 
                 <div className={`marketing-message top-message ${platformAnimationCompleted ? 'fade-in-element' : 'hidden-element'}`}>
@@ -112,7 +112,7 @@ const HomePage: React.FC = () => {
                 
                 <div className={`promo-video ${platformAnimationCompleted ? 'fade-in-element' : 'hidden-element'}`}>
                     <video ref={videoRef} autoPlay loop muted onClick={toggleVideoPlayback}>
-                        <source src="src/assets/promo-video.mp4" type="video/mp4" />
+                        <source src="https://res.cloudinary.com/dcdt4tfgs/video/upload/v1754199701/promo-video_xxeuw5.mp4" type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
 
