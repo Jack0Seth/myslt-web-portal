@@ -100,7 +100,7 @@ const HomePage: React.FC = () => {
                 </div>
                 
                 <div className={`fiber-mascot ${animationCompleted ? 'animate-mascot' : ''}`}>
-                    <img src="src/assets/fiber-mascot.png" alt="FibreOn Mascot" className="mascot-image" />
+                    <img src="https://res.cloudinary.com/dcdt4tfgs/image/upload/v1754199576/fiber-mascot_bb24h4.png" alt="FibreOn Mascot" className="mascot-image" />
                     <img src="src/assets/platform-circle.png" alt="Platform" className={`mascot-platform ${animationCompleted ? 'animate-platform' : ''}`} />
                 </div>
                 
