@@ -61,7 +61,7 @@ const LandingPage: React.FC = () => {
         <div className="logo-container">
           {/* SLT Logo */}
           <img 
-            src="src/assets/slt-mobitel-logo.svg" 
+            src="https://res.cloudinary.com/dcdt4tfgs/image/upload/v1754199680/slt-mobitel-logo_kaaob4.svg" 
             alt="SLT MOBITEL" 
             className="slt-logo-landing"
           />
