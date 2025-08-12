@@ -150,14 +150,15 @@
           color: "#FFFFFF1A",
           padding: 1,
           borderRadius: "10px",
-          height: "60vh",
+          height: "fit-content",
           boxShadow: "0px 3px 3px #0000004A",
         }}
       >
         <Box sx={{ 
-          height: "100%", 
+          height: "fit-content", 
           display: "flex",
-          boxSizing: "border-box",}}>
+          boxSizing: "border-box",
+          gap: 0.5,}}>
             
           <Box
             sx={{
@@ -291,8 +292,10 @@
               justifyContent: "start",
               alignItems: "center",
               minWidth: "fit-content",
+              height: "100%",
+              boxSizing: "border-box",
               gap: 2,
-              paddingX: 2,
+              padding: 2,
               backgroundColor: "#0056A2",
               borderRadius: "10px",
             }}
@@ -300,13 +303,12 @@
             <Box
               sx={{
                 display: "flex",
+                justifyContent: "center",
+                alignContent: "center",
                 width: "100%",
                 flexDirection: "column",
-                alignItems: "start",
                 backgroundColor: "#1B1D41",
                 borderRadius: "10px",
-                
-                marginTop: "20px",
                 padding: 2,
                 gap: 1,
               }}
@@ -315,7 +317,7 @@
               <CustomSection label="Username" value={serviceID} /> */}
               <div className="package-name-prepaid">{packageName}</div>
               
-              <div className="status-account-container-prepaid" style={{ display: "flex", width: "100%",gap: "40px", marginLeft:"12%" }}>
+              <div className="status-account-container-prepaid" style={{ display: "flex", width: "100%", justifyContent: "space-between",gap: "10px" }}>
                 <CustomSection2 label="Active" value={serviceStatus || serviceStatus ? t('prepaid.status.active') : t('prepaid.status.inactive')} />
                 <CustomSection2 label="Account" value={serviceID || serviceID} />
               </div>
