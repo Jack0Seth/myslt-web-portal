@@ -1,376 +1,360 @@
-  import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
-  import { Box, Button, Typography } from "@mui/material";
-  import { useEffect, useState } from "react";
-  import fetchServiceDetailByTelephone from "../../services/fetchServiceDetails";
-  import { parseTime } from "../../services/helperFunctions";
-  import useStore from "../../services/useAppStore";
-  import { DataBalance, ServiceDetailsAPIResponse } from "../../types/types";
-  import CircularProgressBar from "../CircularProgressBar";
-  import { FaClock, FaUser } from 'react-icons/fa'
-  import './BroadbandDetailsPrePaid.css'
-  import { useTranslation } from 'react-i18next';
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import { Box, Button, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { useEffect, useState } from "react";
+import fetchServiceDetailByTelephone from "../../services/fetchServiceDetails";
+import { parseTime } from "../../services/helperFunctions";
+import useStore from "../../services/useAppStore";
+import { DataBalance, ServiceDetailsAPIResponse } from "../../types/types";
+import CircularProgressBar from "../CircularProgressBar";
+import { FaClock, FaUser } from 'react-icons/fa'
+import './BroadbandDetailsPrePaid.css'
+import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence } from 'framer-motion';
 
-  // const commonTextStyle = {
-  //   fontSize: "14px",
-  //   fontWeight: 700,
-  //   color: "#0056A2",
-  // };
+const commonButtonStyle = {
+  borderRadius: "10px",
+  width: "90%",
+};
 
-  const commonButtonStyle = {
-    borderRadius: "10px",
-    width: "90%",
+interface CustomSectionProps {
+  label: string;
+  value: string;
+}
+
+const CustomSection2 = ({ label, value }: CustomSectionProps) => (
+  <div className="package-details-prepaid">
+    <div className={`${label.toLowerCase().replace(/\s+/g, '-')}-indicator-prepaid`}>
+      {label === "Active" ? <FaClock /> : <FaUser />} {value || "Loading..."}
+    </div>
+  </div>
+);
+
+interface ActionButtonProps {
+  text: string;
+  variant?: "outlined" | "contained";
+  onClick: () => void;
+}
+
+const ActionButton = ({
+  text,
+  variant = "outlined",
+  onClick,
+}: ActionButtonProps) => (
+  <Button
+    variant={variant}
+    sx={{
+      ...commonButtonStyle,
+      zIndex: 10,
+      border: variant === "outlined" ? "3px solid #0056A2" : "1px solid #fff",
+      backgroundColor: variant === "contained" ? "#192B5F" : "#fff",
+      color: variant === "contained" ? "#ffffff" : "#0056A2",
+      marginY: variant === "contained" ? 0 : 3,
+      padding: variant === "contained" ? 1 : 2.5,
+      "&:hover": {
+        backgroundColor: variant === "contained" ? "#071835" : "#e0f7fa",
+        border: variant === "outlined" ? "3px solid #004b8c" : "1px solid #fff",
+        color: variant === "contained" ? "#ffffff" : "#004b8c",
+      },
+    }}
+    onClick={onClick}
+  >
+    <Typography
+      variant="body2"
+      textTransform="capitalize"
+      sx={{ fontWeight: "bold", fontSize: 16 }}
+    >
+      {text}
+    </Typography>
+  </Button>
+);
+
+interface BroadbandDetailsPrepaidTemplateProps {
+  dataBalance: DataBalance[];
+  isMain: boolean;
+}
+
+const BroadbandDetailsPrepaidTemplate = ({
+  dataBalance,
+}: BroadbandDetailsPrepaidTemplateProps) => {
+  const { setLeftMenuItem, selectedTelephone } = useStore();
+  const [serviceDetails, setServiceDetails] = useState<ServiceDetailsAPIResponse | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [currentPackage, setCurrentPackage] = useState<DataBalance | null>(null);
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down(1400));
+
+  useEffect(() => {
+    if (selectedTelephone) {
+      const fetchDetails = async () => {
+        const details = await fetchServiceDetailByTelephone(selectedTelephone);
+        setServiceDetails(details);
+      };
+      fetchDetails();
+    }
+  }, [selectedTelephone]);
+
+  useEffect(() => {
+    if (dataBalance.length > 0) {
+      setCurrentPackage(dataBalance[selectedIndex]);
+    } else {
+      setCurrentPackage(null);
+    }
+  }, [dataBalance, selectedIndex]);
+
+  const handlePrev = () => {
+    if (selectedIndex > 0) {
+      setSelectedIndex(selectedIndex - 1);
+    }
   };
 
-  interface CustomSectionProps {
-    label: string;
-    value: string;
-  }
+  const handleNext = () => {
+    if (selectedIndex < dataBalance.length - 1) {
+      setSelectedIndex(selectedIndex + 1);
+    }
+  };
 
-  // const CustomSection = ({ label, value }: CustomSectionProps) => (
-  //   <Typography variant="body2" sx={commonTextStyle}>
-  //     {label}:
-  //     <Typography
-  //       component="span"
-  //       variant="body2"
-  //       sx={{ fontSize: "12px", fontWeight: 500, color: "#0056A2" }}
-  //     >
-  //       {` ${value}`}
-  //     </Typography>
-  //   </Typography>
-  // );
+  const percentage = currentPackage
+    ? (parseFloat(currentPackage.currentAmount) / parseFloat(currentPackage.initialAmount)) * 100
+    : 0;
 
-  const CustomSection2 = ({ label, value }: CustomSectionProps) => (
-    <div className="package-details-prepaid">
-      <div className={`${label.toLowerCase().replace(/\s+/g, '-')}-indicator-prepaid`}>
-        {label === "Active" ? <FaClock /> : <FaUser />} {value || "Loading..."}
-      </div>
-    </div>
-  );
+  const serviceID = serviceDetails?.listofBBService[0]?.serviceID || "Loading...";
+  const serviceStatus = serviceDetails?.listofBBService[0]?.serviceStatus || "Loading...";
+  const packageName = serviceDetails?.listofBBService[0]?.packageName || "Loading...";
 
-  interface ActionButtonProps {
-    text: string;
-    variant?: "outlined" | "contained";
-    onClick: () => void;
-  }
-
-  const ActionButton = ({
-    text,
-    variant = "outlined",
-    onClick,
-  }: ActionButtonProps) => (
-    <Button
-      variant={variant}
+  return (
+    <Box
       sx={{
-        ...commonButtonStyle,
-        zIndex: 10,
-        border: variant === "outlined" ? "3px solid #0056A2" : "1px solid #fff",
-        backgroundColor: variant === "contained" ? "#192B5F" : "#fff",
-        color: variant === "contained" ? "#ffffff" : "#0056A2",
-        marginY: variant === "contained" ? 0 : 3,
-        padding: variant === "contained" ? 1 : 2.5,
-        "&:hover": {
-          backgroundColor: variant === "contained" ? "#071835" : "#e0f7fa",
-          border: variant === "outlined" ? "3px solid #004b8c" : "1px solid #fff",
-          color: variant === "contained" ? "#ffffff" : "#004b8c",
-        },
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#1B1D41",
+        color: "#FFFFFF1A",
+        padding: 2,
+        borderRadius: "10px",
+        boxShadow: "0px 3px 3px #0000004A",
+        width: "100%",
       }}
-      onClick={onClick}
     >
-      <Typography
-        variant="body2"
-        textTransform="capitalize"
-        sx={{ fontWeight: "bold", fontSize: 16 }}
-      >
-        {text}
-      </Typography>
-    </Button>
-  );
-
-  interface BroadbandDetailsPrepaidTemplateProps {
-    dataBalance: DataBalance[];
-    isMain: boolean;
-  }
-
-  const BroadbandDetailsPrepaidTemplate = ({
-    dataBalance,
-  }: BroadbandDetailsPrepaidTemplateProps) => {
-    const { setLeftMenuItem, selectedTelephone } = useStore();
-    const [serviceDetails, setServiceDetails] =
-      useState<ServiceDetailsAPIResponse | null>(null);
-    const [selectedIndex, setSelectedIndex] = useState(0);
-    const { t } = useTranslation();
-
-    useEffect(() => {
-      if (selectedTelephone) {
-        const fetchDetails = async () => {
-          const details = await fetchServiceDetailByTelephone(selectedTelephone);
-          setServiceDetails(details);
-        };
-        fetchDetails();
-      }
-    }, [selectedTelephone]);
-
-    const percentage =
-      dataBalance.length > 0
-        ? (parseFloat(dataBalance[selectedIndex]?.currentAmount) /
-            parseFloat(dataBalance[selectedIndex]?.initialAmount)) *
-          100
-        : 0;
-
-    const initialAmount =
-      dataBalance.length > 0
-        ? parseFloat(dataBalance[selectedIndex]?.initialAmount)
-        : 0;
-    const currentAmount =
-      dataBalance.length > 0
-        ? parseFloat(dataBalance[selectedIndex]?.currentAmount)
-        : 0;
-    const expireTime =
-      dataBalance.length > 0
-        ? parseTime(dataBalance[selectedIndex]?.expireTime)
-        : null;
-    const formattedExpireTime = expireTime?.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-    });
-    const serviceID =
-      serviceDetails?.listofBBService[0]?.serviceID || "Loading...";
-    const serviceStatus =
-      serviceDetails?.listofBBService[0]?.serviceStatus || "Loading...";
-    const packageName =
-      serviceDetails?.listofBBService[0]?.packageName || "Loading...";
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          gap: 2,
-          flexDirection: "column",
-          backgroundColor: "#1B1D41",
-          color: "#FFFFFF1A",
-          padding: 1,
-          borderRadius: "10px",
-          height: "fit-content",
-          boxShadow: "0px 3px 3px #0000004A",
-        }}
-      >
-        <Box sx={{ 
-          height: "fit-content", 
-          display: "flex",
-          boxSizing: "border-box",
-          gap: 0.5,}}>
-            
-          <Box
-            sx={{
-              width: "100%",
-              height: "auto",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 1,
-              padding: 2,
-              border: "1px solid #0056A252",
-              borderRadius: "10px",
-              boxSizing: "border-box",
-            }}
-          >
-            {dataBalance.length > 0 ? (
-              <>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: 20,
-                    textAlign: "center",
-                    fontWeight: 700,
-                    color: "#FFF",
-                  }}
-                >
-                  {dataBalance[selectedIndex]?.packageName}
-                </Typography>
-                <Box
-                  sx={{
-                    width: "95%",
-                    display: "Flex",
-                    gap: 2,
-                    justifyContent: "center",
-                    alignItems: "Center",
-                    position: "relative",
-                    overflow: "hidden",
-                  }}
-                >
-                  <ArrowBackIos
-                    sx={{
-                      color: selectedIndex === 0 ? "gray" : "#0056A2",
-                      zIndex: 100,
-                    }}
-                    onClick={() => {
-                      if (selectedIndex > 0) {
-                        setSelectedIndex(selectedIndex - 1);
-                      }
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      transition: "transform 0.3s ease-in-out",
-                      transform: `translateX(-${selectedIndex * 100}%)`,
-                      width: "80%",
-                    }}
-                  >
-                    {dataBalance.map((item, index) => (
-                      <Box
-                      id = {item.packageName}
-                        key={index}
-                        sx={{
-                          minWidth: "100%",
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <CircularProgressBar percentage={percentage} totalData={initialAmount} />
-                      </Box>
-                    ))}
-                  </Box>
-                  <ArrowForwardIos
-                    sx={{
-                      color:
-                        selectedIndex === dataBalance.length - 1
-                          ? "gray"
-                          : "#0056A2",
-                      zIndex: 100,
-                    }}
-                    onClick={() => {
-                      if (selectedIndex < dataBalance.length - 1) {
-                        setSelectedIndex(selectedIndex + 1);
-                      }
-                    }}
-                  />
-                </Box>
-                <Box>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: 20, fontWeight: 700, color: "#FFF" }}
-                  >
-                    {t('prepaid.dataUsage.gbUsedOf', { 
-                      used: initialAmount - currentAmount, 
-                      total: initialAmount 
-                    })}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: 16, fontWeight: 500, color: "#FFF", paddingLeft: "30px" }}
-                  >
-                    {t('prepaid.dataUsage.validTill', { date: formattedExpireTime })}
-                  </Typography>
-                </Box>
-              </>
-            ) : (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "100%",
-                  flexGrow: 1,
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{ fontSize: 20, fontWeight: 700, color: "#FFF" }}
-                >
-                  {t('prepaid.dataUsage.noDataToShow')}
-                </Typography>
-              </Box>
-            )}
-          </Box>
-          <Box
-            sx={{
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "start",
-              alignItems: "center",
-              minWidth: "fit-content",
-              height: "100%",
-              boxSizing: "border-box",
-              gap: 2,
-              padding: 2,
-              backgroundColor: "#0056A2",
-              borderRadius: "10px",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignContent: "center",
-                width: "100%",
-                flexDirection: "column",
-                backgroundColor: "#1B1D41",
-                borderRadius: "10px",
-                padding: 2,
-                gap: 1,
-              }}
-            >
-              {/* <CustomSection label="Status" value={serviceStatus} />
-              <CustomSection label="Username" value={serviceID} /> */}
-              <div className="package-name-prepaid">{packageName}</div>
-              
-              <div className="status-account-container-prepaid" style={{ display: "flex", width: "100%", justifyContent: "space-between",gap: "10px" }}>
-                <CustomSection2 label="Active" value={serviceStatus || serviceStatus ? t('prepaid.status.active') : t('prepaid.status.inactive')} />
-                <CustomSection2 label="Account" value={serviceID || serviceID} />
-              </div>
-            </Box>
-            {/* <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                backgroundColor: "#FFF",
-                borderRadius: "10px",
-                paddingY: 3,
-                gap: 1,
-              }}
-            >
+      <Box sx={{ 
+        display: "flex",
+        flexDirection: isMediumScreen ? "column" : "row",
+        justifyContent: "space-between",
+        gap: 3,
+        width: "100%",
+      }}>
+        {/* Data Usage Container */}
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 2,
+            padding: 3,
+            border: "1px solid #0056A252",
+            borderRadius: "10px",
+            minHeight: isMediumScreen ? "auto" : "400px",
+            backgroundColor: "#1B1D41",
+            order: isMediumScreen ? 1 : 0,
+          }}
+        >
+          {currentPackage ? (
+            <>
               <Typography
                 variant="body2"
                 sx={{
                   fontSize: 20,
-                  color: "#0056A2",
-                  margin: "auto",
+                  textAlign: "center",
                   fontWeight: 700,
+                  color: "#FFF",
                 }}
               >
-                {isMain ? "Main Package" : "Data Add-ons"}
+                {currentPackage.packageName}
               </Typography>
-            </Box> */}
-            <ActionButton
-              text={t('prepaid.buttons.dataUsage')}
-              variant="outlined"
-              onClick={() => {}}
-            />
-            <ActionButton
-              text={t('prepaid.buttons.getMainPackage')}
-              variant="contained"
-              onClick={() => {
-                setLeftMenuItem("GetBroadbandMainPackage");
-              }}
-            />
-            <ActionButton
-              text={t('prepaid.buttons.getDataAddOns')}
-              variant="contained"
-              onClick={() => {
-                setLeftMenuItem("GetBroadbandAddOnPackage");
-              }}
-            />
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "relative",
+                  minHeight: "300px",
+                }}
+              >
+                <ArrowBackIos
+                  sx={{
+                    color: selectedIndex === 0 ? "gray" : "#0056A2",
+                    cursor: selectedIndex === 0 ? "not-allowed" : "pointer",
+                    fontSize: "2rem",
+                    position: "absolute",
+                    left: isMobile ? "10px" : "30px",
+                    zIndex: 2,
+                  }}
+                  onClick={handlePrev}
+                />
+                
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    maxWidth: "400px",
+                    position: 'relative',
+                    height: '300px'
+                  }}
+                >
+                  <AnimatePresence mode='wait'>
+                    <motion.div
+                      key={selectedIndex}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3 }}
+                      style={{
+                        position: 'absolute',
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <CircularProgressBar 
+                        percentage={percentage} 
+                        totalData={parseFloat(currentPackage.initialAmount)} 
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                </Box>
+
+                <ArrowForwardIos
+                  sx={{
+                    color: selectedIndex === dataBalance.length - 1 ? "gray" : "#0056A2",
+                    cursor: selectedIndex === dataBalance.length - 1 ? "not-allowed" : "pointer",
+                    fontSize: "2rem",
+                    position: "absolute",
+                    right: isMobile ? "10px" : "30px",
+                    zIndex: 2,
+                  }}
+                  onClick={handleNext}
+                />
+              </Box>
+              <Box sx={{ textAlign: "center", width: "100%" }}>
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: 20, fontWeight: 700, color: "#FFF" }}
+                >
+                  {t('prepaid.dataUsage.gbUsedOf', { 
+                    used: (parseFloat(currentPackage.initialAmount) - parseFloat(currentPackage.currentAmount)).toFixed(1), 
+                    total: parseFloat(currentPackage.initialAmount).toFixed(1)
+                  })}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: 16, fontWeight: 500, color: "#FFF" }}
+                >
+                  {t('prepaid.dataUsage.validTill', { 
+                    date: parseTime(currentPackage.expireTime)?.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "2-digit",
+                    }) || "N/A"
+                  })}
+                </Typography>
+              </Box>
+            </>
+          ) : (
             <Box
-              sx={{ position: "absolute", zIndex: 1, right: "1%", bottom: "1%" }}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
+              }}
             >
+              <Typography
+                variant="body2"
+                sx={{ fontSize: 20, fontWeight: 700, color: "#FFF" }}
+              >
+                {t('prepaid.dataUsage.noDataToShow')}
+              </Typography>
+            </Box>
+          )}
+        </Box>
+
+        {/* Package Details Container */}
+        <Box
+          sx={{
+            width: isMediumScreen ? "100%" : "280px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "start",
+            alignItems: "center",
+            gap: 2,
+            padding: 2,
+            backgroundColor: "#0056A2",
+            borderRadius: "10px",
+            minHeight: isMediumScreen ? "auto" : "400px",
+            flexShrink: 0,
+            order: isMediumScreen ? 2 : 0,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              backgroundColor: "#1B1D41",
+              borderRadius: "10px",
+              padding: 2,
+              gap: 2,
+            }}
+          >
+            <div className="package-name-prepaid">{packageName}</div>
+            
+            <Box sx={{ 
+              display: "flex", 
+              width: "100%", 
+              justifyContent: "space-between",
+              gap: 1,
+              flexDirection: isMobile ? "column" : "row",
+            }}>
+              <CustomSection2 
+                label="Active" 
+                value={serviceStatus ? t('prepaid.status.active') : t('prepaid.status.inactive')} 
+              />
+              <CustomSection2 
+                label="Account" 
+                value={serviceID} 
+              />
             </Box>
           </Box>
+
+          <ActionButton
+            text={t('prepaid.buttons.dataUsage')}
+            variant="outlined"
+            onClick={() => {}}
+          />
+          <ActionButton
+            text={t('prepaid.buttons.getMainPackage')}
+            variant="contained"
+            onClick={() => {
+              setLeftMenuItem("GetBroadbandMainPackage");
+            }}
+          />
+          <ActionButton
+            text={t('prepaid.buttons.getDataAddOns')}
+            variant="contained"
+            onClick={() => {
+              setLeftMenuItem("GetBroadbandAddOnPackage");
+            }}
+          />
         </Box>
       </Box>
-    );
-  };
+    </Box>
+  );
+};
 
-  export default BroadbandDetailsPrepaidTemplate;
+export default BroadbandDetailsPrepaidTemplate;
