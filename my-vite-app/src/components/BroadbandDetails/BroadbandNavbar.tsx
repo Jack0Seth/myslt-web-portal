@@ -39,16 +39,18 @@ const BroadbandNavbar: React.FC<BroadbandNavbarProps> = ({
           </span>
           
           <span className="item-details-broadband">
-  {item.label === "My Package"
-    ? item.limit != null && item.used != null
-      ? `${item.used} used from ${item.limit} GB`
-      : "N/A"
-    : type === "Summary"
-    ? item.limit != null || item.used != null
-      ? `${item.used ?? 0} used from ${item.limit ?? 0} GB`
-      : "N/A"
-    : item.limit ?? "N/A"}
-</span>
+            {
+            item.label === "My Package"
+              ? item.limit != null && item.used != null
+                ? `${item.used} used from ${item.limit} GB`
+                : "N/A"
+              : type === "Summary"
+              ? item.limit != null || item.used != null
+                ? `${item.used ?? 0} used from ${item.limit ?? 0} GB`
+                : "N/A"
+              : item.limit ?? "N/A"
+              }
+          </span>
 
         </button>
       ))}

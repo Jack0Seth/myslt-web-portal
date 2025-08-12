@@ -5,15 +5,24 @@ import {
   ListItemText,
   Popover,
   Typography,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
 import React, { useEffect, useState } from "react";
 import useStore from "../services/useAppStore";
 import { useTranslation } from 'react-i18next';
 
 const MenuLeft: React.FC = () => {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.only('xs'));
+  const isSm = useMediaQuery(theme.breakpoints.only('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.only('md'));
+  const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
+
   const {
     serviceDetails,
     setLeftMenuItem,
@@ -51,6 +60,20 @@ const MenuLeft: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [mousePosition, setMousePosition] = useState<{ mouseX: number; mouseY: number } | null>(null);
+
+  // Calculate grid columns based on screen size and number of items
+  const getGridItemWidth = () => {
+    // If there are only 2 items, make them take full width (6 columns each)
+    if (items.length <= 2) return 6;
+    
+    // For more items, use responsive columns
+    if (isXs || isSm) return 3; // 4 items per row (12/3)
+    if (isMd) return 2.4;       // 5 items per row (12/5)
+    if (isLgUp) return 12/7;    // 7 items per row (matches original layout)
+    return 3;                   // Default fallback
+  };
+
+  const gridItemWidth = getGridItemWidth();
 
   // Helper function to get display text
   const getDisplayText = (itemKey: string): string => {
@@ -129,74 +152,92 @@ const MenuLeft: React.FC = () => {
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "center",
-        gap: 2.2,
         width: "100%",
         color: "#FFFFFF1A",
         padding: 1,
         background: "linear-gradient(to right, #0068B1, #183366)",
         borderRadius: "10px",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        maxHeight: "500px",
         boxSizing: "border-box",
       }}
     >
-      {items.map((item, index) => (
-        <Button
-          key={index}
-          sx={{
-            backgroundColor: item === selectedItem ? "rgba(255, 255, 255, 0.15)" : "#192B5F",
-            borderRadius: "10px",
-            padding: 1.1,
-            color: "#ffffff",
-            width: "100%",
-            //minWidth: "100px",
-            justifyContent: "center",
-            margin: "2px",
-            "&:hover": {
-              backgroundColor: item === selectedItem ? " rgba(255, 255, 255, 0.1)" : " rgba(255, 255, 255, 0.1)",
-              borderColor: "#50B748",
-            },
-          }}
-          onClick={(event) => {
-            if (item === "more") {
-              handleMoreClick(event);
-            } else {
-              setSelectedItem(item);
-              // Convert key back to legacy format for store compatibility
-              const legacyMap: { [key: string]: string } = {
-                "summary": "Summary",
-                "dailyUsage": "Daily Usage",
-                "giftData": "Gift Data",
-                "history": "History",
-                "redeemData": "Redeem Data",
-                "happyDay": "Happy Day",
-                "mainPackages": "Main Packages",
-                "dataAddOns": "Data Add-Ons",
-                "myPackage": "My Package",
-                "vod": "VOD",
-                "peoTvGo": "PEOTVGO",
-                "packages": "Packages",
-                "callForwarding": "Call Forwarding",
-              };
-              setLeftMenuItem(legacyMap[item] || item);
-            }
-          }}
-        >
-          <Typography
-            variant="body2"
-            sx={{
-              fontSize: "16px",
-              color: item === selectedItem ? "#FFFFFF" : "#FFFFFF",
-              textTransform: "capitalize",
-              fontWeight: item === selectedItem ? 600 : 600,
+      <Grid container spacing={1} sx={{ width: "100%", margin: 0 }}>
+        {items.map((item, index) => (
+          <Grid 
+            item 
+            xs={gridItemWidth} 
+            key={index} 
+            sx={{ 
+              padding: "4px !important",
+              minWidth: items.length <= 2 ? "50%" : "100px", // Full width for 2 items
+              flexGrow: items.length <= 2 ? 1 : 0 // Allow equal distribution for 2 items
             }}
           >
-            {getDisplayText(item)}
-          </Typography>
-        </Button>
-      ))}
+            <Button
+              fullWidth
+              sx={{
+                backgroundColor: item === selectedItem ? "rgba(255, 255, 255, 0.15)" : "#192B5F",
+                borderRadius: "8px",
+                padding: "8px 4px",
+                color: "#ffffff",
+                minHeight: "64px",
+                justifyContent: "center",
+                margin: 0,
+                "&:hover": {
+                  backgroundColor: item === selectedItem ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.1)",
+                  borderColor: "#50B748",
+                },
+                width: items.length <= 2 ? "100%" : undefined // Full width for 2 items
+              }}
+              onClick={(event) => {
+                if (item === "more") {
+                  handleMoreClick(event);
+                } else {
+                  setSelectedItem(item);
+                  // Convert key back to legacy format for store compatibility
+                  const legacyMap: { [key: string]: string } = {
+                    "summary": "Summary",
+                    "dailyUsage": "Daily Usage",
+                    "giftData": "Gift Data",
+                    "history": "History",
+                    "redeemData": "Redeem Data",
+                    "happyDay": "Happy Day",
+                    "mainPackages": "Main Packages",
+                    "dataAddOns": "Data Add-Ons",
+                    "myPackage": "My Package",
+                    "vod": "VOD",
+                    "peoTvGo": "PEOTVGO",
+                    "packages": "Packages",
+                    "callForwarding": "Call Forwarding",
+                  };
+                  setLeftMenuItem(legacyMap[item] || item);
+                }
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: {
+                    xs: "12px",
+                    sm: "13px",
+                    md: "14px",
+                    lg: "16px"
+                  },
+                  color: "#FFFFFF",
+                  textTransform: "capitalize",
+                  fontWeight: 600,
+                  textAlign: "center",
+                  wordBreak: "break-word",
+                  lineHeight: "1.2",
+                  padding: "0 4px",
+                }}
+              >
+                {getDisplayText(item)}
+              </Typography>
+            </Button>
+          </Grid>
+        ))}
+      </Grid>
 
       <Popover
         id={id}
