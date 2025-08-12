@@ -162,7 +162,7 @@
             
           <Box
             sx={{
-              width: "60%",
+              width: "100%",
               height: "auto",
               display: "flex",
               flexDirection: "column",
