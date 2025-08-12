@@ -66,8 +66,6 @@
     }
     
     .service-list {
-      flex-direction: row;
-      overflow-x: auto;
       padding: 10px;
       justify-content: space-around;
     }

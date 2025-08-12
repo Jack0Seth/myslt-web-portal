@@ -20,14 +20,23 @@
   object-fit: cover;
 }
 
-.mobile-account-selector {
-  display: flex;
-  flex-direction: column;
-  width: 60%;
+@media (max-width: 768px) {
+  .account-selector {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .account-select-wrapper {
+    width: 300%;
+  }
+
+  .profile-section {
+    order: 2;
+  }
 }
 
 /* Added for better mobile account selector visibility */
-.mobile-account-selector .account-select {
+.account-selector .account-select {
   background-color: rgba(0, 104, 177, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }

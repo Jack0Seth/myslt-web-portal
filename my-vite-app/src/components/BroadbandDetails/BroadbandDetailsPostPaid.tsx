@@ -178,243 +178,245 @@ const BroadbandDetailsPostPaid = () => {
         height: "100%",
       }}
     >
+      {/* Content with Circular Progress Pie Chart and Left Nav Tabs */}
       <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        color: "#FFFFFF1A",
-        padding: 1,
-        width: "100%",
-        borderRadius: "10px",
-        height: "100%",
-      }}
-      >
-      <Box
-      sx={{
-        display: "flex",
-        gap: 6,
-        flexDirection: "column",
-        color: "#FFFFFF1A",
-        padding: 1,
-        width: "25%",
-        borderRadius: "10px",
-        height: "100%",
-      }}
-    >
-      {
-        <BroadbandNavbar
-          navbarItems={navbarItems}
-          onSelected={setSelectedItem}
-          type="Summary"
-          selected="My Package"
-        />
-      }
-    </Box>
-    <Box
-      sx={{
-        display: "flex",
-        gap: 2,
-        flexDirection: "column",
-        backgroundColor: "#1B1D41",
-        color: "#FFFFFF1A",
-        padding: 1,
-        width: "75%",
-        borderRadius: "10px",
-        height: "100%",
-      }}
-    >
-      <Box sx={{ height: "100%", display: "flex", justifyContent: "end" }}>
-        {loading ? (
-          <Box
-            sx={{
-              width: "100%",
-              
-              height: "60vh",
-              maxHeight: "400px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 1,
-              padding: 2,
-              border: "1px solid #0056A252",
-              borderRadius: "10px",
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              width: "100%",
-              
-              height: "60vh",
-              maxHeight: "400px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "start",
-              alignItems: "center",
-              gap: 1,
-              padding: 2,
-              border: "1px solid #0056A252",
-              borderRadius: "10px",
-            }}
-          >
-            {selectedPackage && selectedPackage?.usageDetails.length > 0 && !loading ? (
-              <>
-                <Typography
-                  variant="body2"
-                  sx={{ fontSize: 20, fontWeight: 700, color: "#fff" }}
-                >
-                  {selectedItem === "My Package"
-                    ? `Your speed is ${selectedPackage?.status} right now`
-                    : selectedPackage?.usageDetails[selectedIndex]?.name ||
-                      "Loading..."}
-                </Typography>
-                <Box
-                  sx={{
-                    width: "65%",
-                    display: "Flex",
-                    gap: 2,
-                    justifyContent: "center",
-                    alignItems: "Center",
-                    position: "relative",
-                    overflow: "hidden",
-                  }}
-                >
-                  <ArrowBackIos
-                    sx={{
-                      marginRight: -1,
-                      color: selectedIndex === 0 ? "gray" : "#0056A2",
-                      zIndex: 100,
-                    }}
-                    onClick={() => {
-                      if (selectedIndex > 0) {
-                        setSelectedIndex(selectedIndex - 1);
-                      }
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      transition: "transform 0.3s ease-in-out",
-                      transform: `translateX(-${selectedIndex * 110}%)`,
-                      width: "80%",
-                      maxWidth: "300px",
-                    }}
-                  >
-                    {selectedPackage?.usageDetails.map((item, index) => (
-                      <Box
-                        id={item.name}
-                        key={index}
-                        sx={{
-                          minWidth: "110%",
-                          display: "flex",
-                          justifyContent: "start",
-                        }}
-                      >
-                        <CircularProgressBar
-                          percentage={
-                            selectedPackage?.usageDetails[selectedIndex]
-                              ?.percentage
-                          }
-                          totalData={
-                            selectedPackage?.usageDetails[selectedIndex].limit
-                          }                          
-                        />
-                      </Box>
-                    ))}
-                  </Box>
-                  <ArrowForwardIos
-                    sx={{
-                      color:
-                        selectedIndex ===
-                        selectedPackage.usageDetails.length - 1
-                          ? "gray"
-                          : "#0056A2",
-                      zIndex: 100,
-                    }}
-                    onClick={() => {
-                      if (
-                        selectedIndex <
-                        selectedPackage.usageDetails.length - 1
-                      ) {
-                        setSelectedIndex(selectedIndex + 1);
-                      }
-                    }}
-                  />
-                </Box>
-                <Typography
-                  variant="body2"
-                  sx={{ fontSize: 20, fontWeight: 700, color: "#FFF" }}
-                >
-                  {/* {`${selectedPackage?.usageDetails[selectedIndex].used} GB USED OF ${selectedPackage?.usageDetails[selectedIndex].limit} GB`} */}
-                  {t('broadbandDetails.dataUsage', {
-                    used: selectedPackage?.usageDetails[selectedIndex].used,
-                    limit: selectedPackage?.usageDetails[selectedIndex].limit
-                  })}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{ fontSize: 16, fontWeight: 500, color: "#FFF" }}
-                >
-                  {t('broadbandDetails.validTill', {
-                    date: selectedPackage?.usageDetails[selectedIndex].expiry_date
-                  })}
-                </Typography>
-              </>
-            ) : (
-              <Typography
-                variant="body2"
-                sx={{ fontSize: 20, fontWeight: 700, color: "#fff" }}
-              >
-                {t('broadbandDetails.noDataAvailable')}
-              </Typography>
-            )}
-          </Box>
-        )}
-        
-      </Box>
-
-      {/* Updated bottom section to match the design in the image */}
-      
-    </Box>
-      </Box>
-      <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        color: "#FFFFFF1A",
-        padding: 1,
-        width: "100%",
-        borderRadius: "10px",
-        height: "100%",
-      }}>
-          <Box
         sx={{
           display: "flex",
+          flexDirection: {xs: "column", md: "row"},
+          color: "#FFFFFF1A",
+          padding: 1,
           width: "100%",
-          // background: "linear-gradient(to right, #002053, #1A3365)",
           borderRadius: "10px",
-          position: "relative",
-          background: "#1B1D41",
-          
+          height: "100%",
         }}
       >
-        {/* Left side info and button */}
         <Box
           sx={{
             display: "flex",
+            gap: 6,
             flexDirection: "column",
-            
-            width: "50%",
-            padding: 2,
+            color: "#FFFFFF1A",
+            padding: 1,
+            width: "25%",
             borderRadius: "10px",
-            
-            alignItems: "center"
+            height: "100%",
           }}
         >
+          {
+            <BroadbandNavbar
+              navbarItems={navbarItems}
+              onSelected={setSelectedItem}
+              type="Summary"
+              selected="My Package"
+            />
+          }
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            flexDirection: "column",
+            backgroundColor: "#1B1D41",
+            color: "#FFFFFF1A",
+            padding: 1,
+            width: "75%",
+            borderRadius: "10px",
+            height: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          <Box sx={{ height: "100%", display: "flex", justifyContent: "end", boxSizing: "border-box" }}>
+            {loading ? (
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "60vh",
+                  maxHeight: "400px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 1,
+                  padding: 2,
+                  border: "1px solid #0056A252",
+                  borderRadius: "10px",
+                  boxSizing: "border-box",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  width: "100%",
+
+                  height: "60vh",
+                  maxHeight: "400px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "start",
+                  alignItems: "center",
+                  gap: 1,
+                  padding: 2,
+                  border: "1px solid #0056A252",
+                  borderRadius: "10px",
+                }}
+              >
+                {selectedPackage && selectedPackage?.usageDetails.length > 0 && !loading ? (
+                  <>
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: 20, fontWeight: 700, color: "#fff" }}
+                    >
+                      {selectedItem === "My Package"
+                        ? `Your speed is ${selectedPackage?.status} right now`
+                        : selectedPackage?.usageDetails[selectedIndex]?.name ||
+                        "Loading..."}
+                    </Typography>
+                    <Box
+                      sx={{
+                        width: "65%",
+                        display: "Flex",
+                        gap: 2,
+                        justifyContent: "center",
+                        alignItems: "Center",
+                        position: "relative",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <ArrowBackIos
+                        sx={{
+                          marginRight: -1,
+                          color: selectedIndex === 0 ? "gray" : "#0056A2",
+                          zIndex: 100,
+                        }}
+                        onClick={() => {
+                          if (selectedIndex > 0) {
+                            setSelectedIndex(selectedIndex - 1);
+                          }
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          display: "flex",
+                          transition: "transform 0.3s ease-in-out",
+                          transform: `translateX(-${selectedIndex * 110}%)`,
+                          width: "80%",
+                          maxWidth: "300px",
+                        }}
+                      >
+                        {selectedPackage?.usageDetails.map((item, index) => (
+                          <Box
+                            id={item.name}
+                            key={index}
+                            sx={{
+                              minWidth: "110%",
+                              display: "flex",
+                              justifyContent: "start",
+                            }}
+                          >
+                            <CircularProgressBar
+                              percentage={
+                                selectedPackage?.usageDetails[selectedIndex]
+                                  ?.percentage
+                              }
+                              totalData={
+                                selectedPackage?.usageDetails[selectedIndex].limit
+                              }
+                            />
+                          </Box>
+                        ))}
+                      </Box>
+                      <ArrowForwardIos
+                        sx={{
+                          color:
+                            selectedIndex ===
+                              selectedPackage.usageDetails.length - 1
+                              ? "gray"
+                              : "#0056A2",
+                          zIndex: 100,
+                        }}
+                        onClick={() => {
+                          if (
+                            selectedIndex <
+                            selectedPackage.usageDetails.length - 1
+                          ) {
+                            setSelectedIndex(selectedIndex + 1);
+                          }
+                        }}
+                      />
+                    </Box>
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: 20, fontWeight: 700, color: "#FFF" }}
+                    >
+                      {/* {`${selectedPackage?.usageDetails[selectedIndex].used} GB USED OF ${selectedPackage?.usageDetails[selectedIndex].limit} GB`} */}
+                      {t('broadbandDetails.dataUsage', {
+                        used: selectedPackage?.usageDetails[selectedIndex].used,
+                        limit: selectedPackage?.usageDetails[selectedIndex].limit
+                      })}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: 16, fontWeight: 500, color: "#FFF" }}
+                    >
+                      {t('broadbandDetails.validTill', {
+                        date: selectedPackage?.usageDetails[selectedIndex].expiry_date
+                      })}
+                    </Typography>
+                  </>
+                ) : (
+                  <Typography
+                    variant="body2"
+                    sx={{ fontSize: 20, fontWeight: 700, color: "#fff" }}
+                  >
+                    {t('broadbandDetails.noDataAvailable')}
+                  </Typography>
+                )}
+              </Box>
+            )}
+
+          </Box>
+
+          {/* Updated bottom section to match the design in the image */}
+
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          color: "#FFFFFF1A",
+          padding: 1,
+          width: "100%",
+          borderRadius: "10px",
+          height: "100%",
+        }}>
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            // background: "linear-gradient(to right, #002053, #1A3365)",
+            borderRadius: "10px",
+            position: "relative",
+            background: "#1B1D41",
+
+          }}
+        >
+          {/* Left side info and button */}
           <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+
+              width: "50%",
+              padding: 2,
+              borderRadius: "10px",
+
+              alignItems: "center"
+            }}
+          >
+            <Box
             // sx={{
             //   display: "flex",
             //   flexDirection: "column",
@@ -423,116 +425,116 @@ const BroadbandDetailsPostPaid = () => {
             //   borderRadius: "10px",
             //   padding: 1,
             // }}
-          >
-            {/* <CustomSection label="Package" value={packageName} />
+            >
+              {/* <CustomSection label="Package" value={packageName} />
             <CustomSection label="Status" value={serviceStatus} />
             <CustomSection label="Username" value={serviceID} /> */}
-            <div className="package-name">{packageName}</div>
-            
-            <div className="status-account-container" style={{ display: "flex", width: "100%", justifyContent: "space-between",gap: "20px" }}>
-              <CustomSection label={t('broadbandDetails.active')}  value={serviceStatus ? t('broadbandDetails.active') : t('broadbandDetails.inactive')} />
-              <CustomSection label="Account" value={serviceID || serviceID} />
-            </div>
-          </Box>
-          
-          <Button
-            variant="outlined"
-            sx={{
-              borderRadius: "5px",
-              border: "2px solid #fff",
-              color: "#fff",
-              textTransform: "none",
-              padding: "10px 20px",
-              fontSize: "14px",
-              fontWeight: "bold",
-              width: "80%",
-              mt: 2,
-              "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.1)",
+              <div className="package-name">{packageName}</div>
+
+              <div className="status-account-container" style={{ display: "flex", width: "100%", justifyContent: "space-between", gap: "20px" }}>
+                <CustomSection label={t('broadbandDetails.active')} value={serviceStatus ? t('broadbandDetails.active') : t('broadbandDetails.inactive')} />
+                <CustomSection label="Account" value={serviceID || serviceID} />
+              </div>
+            </Box>
+
+            <Button
+              variant="outlined"
+              sx={{
+                borderRadius: "5px",
                 border: "2px solid #fff",
-              },
-            }}
-            onClick={() => {
-              setLeftMenuItem("PostPaidPackageUpgrade");
-            }}
-          >
-            {t('broadbandDetails.packageUpgrade')}
-          </Button>
-        </Box>
-        
-        {/* Right side buttons */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "50%",
-            justifyContent: "center",
-            borderRadius: "10px",
-            background: "#192B5F",
-            alignItems: "center",
-            gap: 2,
-          }}
-        >
-          <Button
-            variant="contained"
+                color: "#fff",
+                textTransform: "none",
+                padding: "10px 20px",
+                fontSize: "14px",
+                fontWeight: "bold",
+                width: "80%",
+                mt: 2,
+                "&:hover": {
+                  backgroundColor: "rgba(255,255,255,0.1)",
+                  border: "2px solid #fff",
+                },
+              }}
+              onClick={() => {
+                setLeftMenuItem("PostPaidPackageUpgrade");
+              }}
+            >
+              {t('broadbandDetails.packageUpgrade')}
+            </Button>
+          </Box>
+
+          {/* Right side buttons */}
+          <Box
             sx={{
-              backgroundColor: "#192B5F",
-              color: "#fff",
-              borderRadius: "5px",
-              border: "2px solid #fff",
-              padding: "10px 20px",
-              
-              fontWeight: "bold",
-              width: "60%",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "#071835",
-              },
-            }}
-            onClick={() => {
-              setLeftMenuItem("GetExtraGB");
+              display: "flex",
+              flexDirection: "column",
+              width: "50%",
+              justifyContent: "center",
+              borderRadius: "10px",
+              background: "#192B5F",
+              alignItems: "center",
+              gap: 2,
             }}
           >
-             {t('broadbandDetails.getExtraGB')}
-          </Button>
-          
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#192B5F",
-              color: "#fff",
-              borderRadius: "5px",
-              border: "2px solid #fff",
-              padding: "10px 20px",
-              
-              fontWeight: "bold",
-              width: "60%",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "#071835",
-              },
-            }}
-            onClick={() => {
-              setLeftMenuItem("GetPostpaidAddOnPackages");
-            }}
-          >
-            {t('broadbandDetails.getDataAddOns')}
-          </Button>
-        </Box>
-        
-        {/* Watermark logo */}
-        {/* <Box
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#192B5F",
+                color: "#fff",
+                borderRadius: "5px",
+                border: "2px solid #fff",
+                padding: "10px 20px",
+
+                fontWeight: "bold",
+                width: "60%",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#071835",
+                },
+              }}
+              onClick={() => {
+                setLeftMenuItem("GetExtraGB");
+              }}
+            >
+              {t('broadbandDetails.getExtraGB')}
+            </Button>
+
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#192B5F",
+                color: "#fff",
+                borderRadius: "5px",
+                border: "2px solid #fff",
+                padding: "10px 20px",
+
+                fontWeight: "bold",
+                width: "60%",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#071835",
+                },
+              }}
+              onClick={() => {
+                setLeftMenuItem("GetPostpaidAddOnPackages");
+              }}
+            >
+              {t('broadbandDetails.getDataAddOns')}
+            </Button>
+          </Box>
+
+          {/* Watermark logo */}
+          {/* <Box
           sx={{ position: "absolute", zIndex: 1, right: "1%", bottom: "1%" }}
         >
           <img src={WatermarkLogo} alt="Watermark Logo" />
         </Box> */}
+        </Box>
       </Box>
-      </Box>
-      
-    </Box>
-      
 
-      
+    </Box>
+
+
+
   );
 };
 
