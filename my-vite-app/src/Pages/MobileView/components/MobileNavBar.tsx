@@ -4,8 +4,10 @@ import './MobileNavBar.css';
 
 const MobileNavBar = () => {
   return (
-    <div className="mobile-nav-bar">
-      <CustomNavBar />
+    <div className="nav-bar-container">
+      <div className="mobile-nav-bar">
+        <CustomNavBar />
+      </div>
     </div>
   );
 };

@@ -48,7 +48,6 @@ const UserProfile = () => {
     <Box
       sx={{
         position: "relative",
-        width: "100%",
         backgroundColor: "#0a1e38",
         color: "white",
         padding: "24px",
@@ -97,7 +96,13 @@ const UserProfile = () => {
       </Box>
 
       {/* Main Content */}
-      <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 3 }}>
+      <Box sx={{ 
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" },
+        boxSizing: "border-box",
+        gap: "10px",
+        maxWidth: "100%",
+      }}>
         {/* Profile Card - Left Side */}
         <Box
           sx={{
@@ -108,9 +113,11 @@ const UserProfile = () => {
             overflow: "hidden",
             display: "flex",
             flexDirection: "column",
+            boxSizing: "border-box",
             alignItems: "center",
             padding: "0",
             minHeight: "400px",
+            marginBottom: { xs: 3, md: 0 },
           }}
         >
           {/* Top Curved Background with Avatar inside at bottom */}
@@ -121,13 +128,13 @@ const UserProfile = () => {
               backgroundColor: "#4b96ff",
               borderRadius: "0 0 50% 50%",
               display: "flex",
+              boxSizing: "border-box",
               justifyContent: "center",
-              alignItems: "flex-end", // Align items to the bottom
-              paddingBottom: "10px", // Add some padding at the bottom
+              alignItems: "flex-end",
+              paddingBottom: "10px",
               position: "relative",
             }}
           >
-            {/* Avatar moved inside the curved section */}
             <Avatar
               alt="User Avatar"
               sx={{
@@ -136,7 +143,7 @@ const UserProfile = () => {
                 backgroundColor: "#8cffcb",
                 border: "3px solid white",
                 zIndex: 2,
-                marginBottom: "-7px", // Slightly overlap the curved boundary
+                marginBottom: "-7px",
               }}
             >
               {/* Placeholder for avatar image */}
@@ -150,7 +157,7 @@ const UserProfile = () => {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "flex-start",
-              paddingTop: "40px", // Increased to account for avatar overlap
+              paddingTop: "40px",
               textAlign: "center",
               flex: 1,
             }}
@@ -211,10 +218,13 @@ const UserProfile = () => {
         {/* Form - Right Side */}
         <Box 
           sx={{ 
-            flex: { xs: "1", md: "0 0 60%" },
             display: "flex",
             flexDirection: "column",
+            boxSizing: "border-box",
+            paddingLeft: { xs: 0, md: "0" },
+            paddingTop: { xs: "0px", md: 0 }, // Add top padding on mobile
             justifyContent: "center",
+            flex: { xs: "1", md: "0 0 60%" },
           }}
         >
           {/* Mobile Field */}
@@ -230,8 +240,6 @@ const UserProfile = () => {
             {t('profile.enter_mobile')} :
           </Typography>
           <TextField
-            fullWidth
-           
             variant="outlined"
             value={altrContact}
             onChange={(e) => setAltrContact(e.target.value)}
@@ -242,7 +250,6 @@ const UserProfile = () => {
                 color: "white",
                 borderRadius: "8px",
                 height: "45px",
-                 width: "450px"
               },
               "& .MuiOutlinedInput-notchedOutline": {
                 border: "1px solid #355680",
@@ -269,7 +276,6 @@ const UserProfile = () => {
             {t('profile.name')} :
           </Typography>
           <TextField
-            fullWidth
             variant="outlined"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -280,7 +286,6 @@ const UserProfile = () => {
                 color: "white",
                 borderRadius: "8px",
                 height: "45px",
-                width: "450px",
               },
               "& .MuiOutlinedInput-notchedOutline": {
                 border: "1px solid #355680",

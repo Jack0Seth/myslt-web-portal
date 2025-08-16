@@ -4,8 +4,17 @@
   display: none;
 }
 
+.nav-bar-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
 .mobile-view .mobile-nav-bar {
     padding: 10px 15px;
+    margin: 10px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
