@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./BroadbandNavbar.css"; // You'll need to create this CSS file
+import "./BroadbandNavbar.css";
 
 interface BroadbandNavbarProps {
   navbarItems: {
@@ -51,7 +51,6 @@ const BroadbandNavbar: React.FC<BroadbandNavbarProps> = ({
               : item.limit ?? "N/A"
               }
           </span>
-
         </button>
       ))}
     </div>
